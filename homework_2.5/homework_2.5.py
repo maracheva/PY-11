@@ -19,8 +19,6 @@ def resizer(source_dir, output_dir):
         # subprocess.run(['convert', source_image, '-resize', '200', output_image]) # синхронное выполнение
         subprocess.Popen(['convert', source_image, '-resize', '200', output_image]) # асинхронное выполнение
 
-
-if __name__ == "__main__":
-    source_dir = 'Source'
-    output_dir = 'Result'
-    resizer(source_dir, output_dir)
+source_dir = 'Source'
+output_dir = 'Result'
+resizer(source_dir, output_dir)
