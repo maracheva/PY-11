@@ -1,7 +1,8 @@
-#coding: utf-8
-#pip3 install chardet
+# coding: utf-8
+# pip3 install chardet
 
 import chardet
+
 
 # фукнция чтения и сортировки файлов
 def word_sort(name):
@@ -16,16 +17,17 @@ def word_sort(name):
             if len(word) > 6:
                 word = word.lower()
                 if word in word_value:  # для подсчета слов, достаточно проверить есть ли слово в word_value или нет.
-                    word_value[word] += 1  #  если есть, то увеличиваем на единицу
+                    word_value[word] += 1  # если есть, то увеличиваем на единицу
                 else:
-                    word_value[word] = 1   # если нет, то задаем значение = 1
+                    word_value[word] = 1  # если нет, то задаем значение = 1
 
-# Сортируем пары (слово, частота) по частоте, т.е. по x[1]
-# reverse=True даст отсортированные пары по убыванию
+        # Сортируем пары (слово, частота) по частоте, т.е. по x[1]
+        # reverse=True даст отсортированные пары по убыванию
         sorted_count_pairs = sorted(word_value.items(), key=lambda x: x[1], reverse=True)
         top10 = sorted_count_pairs[:10]  # Берем первые 10 штук
         for i, (word, freq) in enumerate(top10):  # выведем на экран пронумерованный список ТОП10 слов
-            print('{:>2}. Слово "{}" встретилось {} раз'.format(i+1, word, freq))
+            print('{:>2}. Слово "{}" встретилось {} раз'.format(i + 1, word, freq))
+
 
 # главная функция: запрашивает имя файла, запускает другие функции
 def main():
@@ -53,7 +55,6 @@ def main():
             break
         else:
             print('Некорректный ввод. Повторите.')
-
 
 
 main()
