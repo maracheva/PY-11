@@ -45,31 +45,19 @@ def get_files_list():
     return [file for file in files_list if
             file.endswith('.txt')]  # находим файлы с .txt и помещаем их в список files_list
 
-print(get_files_list())
-# get_files_list()
 # Функция получает именя директорий исходных файлов и производит преобразование файлов в новые с другими размерами
 def get_new_files():
-    # if result_dir not in files_list:  # если result_dir нет в списке файлов рабочей директории, то создать папку.
-    #     os.mkdir(result_dir)  # создать папку result_dir, куда будем записывать новые файлы после их перевода
-    # for file_ in get_files_list():
-    #     result_files = os.path.join(original_dir, file_)
-    #     print(result_files)
-    #     with open(result_files, 'r', encoding='utf8') as fr:
-    #         lang_from = file_.lower()
-    #         text_after = translate_it(fr.read(), '{}'.format(lang_from))
-    #         with open(result_files, 'w', encoding='utf8') as fw:
-    #             fw.write(text_after)
     lang_ru = 'ru'
-    if 'results' not in os.listdir():
-        os.mkdir('results')
-    for fl_file in os.listdir(original_dir):
-        source_file = os.path.join(original_dir, fl_file)
-        with open(source_file, 'r', encoding='utf8') as f_read:
-            lang_from = fl_file[:-4].lower()
-            translated = translate_it(f_read.read(), '{}-{}'.format(lang_from, lang_ru))
-            result_file = os.path.join('results', fl_file)
-            with open(result_file, 'w', encoding='utf8') as f_write:
-                f_write.write(translated)
+    if result_dir not in os.listdir():
+        os.mkdir(result_dir)
+    for file in os.listdir(original_dir):
+        source_file = os.path.join(original_dir, file)
+        with open(source_file, 'r', encoding='utf8') as fr:
+            lang_from = file.lower()
+            text_translated = translate_it(fr.read(), '{}-{}'.format(lang_from, lang_ru))
+            result_file = os.path.join(result_dir, file)
+        with open(result_file, 'w', encoding='utf8') as fw:
+            fw.write(text_translated)
 
 
 result_dir = 'Result'
