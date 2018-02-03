@@ -21,20 +21,18 @@ def translate_it(text, lang):
     :param text: <str> text for translation.-
     :return: <str> translated text.
     """
-    url = 'https://translate.yandex.net/api/v1.5/tr.json/translate'
-    key = 'trnsl.1.1.20161025T233221Z.47834a66fd7895d0.a95fd4bfde5c1794fa433453956bd261eae80152'
+    URL = 'https://translate.yandex.net/api/v1.5/tr.json/translate'
+    KEY = 'trnsl.1.1.20161025T233221Z.47834a66fd7895d0.a95fd4bfde5c1794fa433453956bd261eae80152'
 
-    params = {'key': key,
-              # 'lang': '{}' + '-ru'.format(lang_from),
+    params = {'key': KEY,
               'lang': lang,
               'text': text
               }
-    response = requests.get(url, params=params).json()
+    #print(params)
+    response = requests.get(URL, params=params).json()
+    #print(response)
     return ' '.join(response.get('text', []))
 
-
-# a = translate_it('Привет')
-# print(a)
 original_dir = 'Original'  # папка с исходными файлами с данными
 current_dir = os.path.dirname(os.path.abspath(__file__))  # имя абсолютного пути рабочей директории
 abs_dir = os.path.join(current_dir, original_dir)  # переменная = соединению путей рабочей директории
@@ -52,8 +50,10 @@ def get_new_files():
         os.mkdir(result_dir)
     for file in os.listdir(original_dir):
         source_file = os.path.join(original_dir, file)
+        #print(file) # выведет название файла DE.txt, ES.txt, FR.txt
         with open(source_file, 'r', encoding='utf8') as fr:
-            lang_from = file.lower()
+            lang_from = file[:2].lower() # сделаем ниж.регистр и срез (DE.txt[:2] или DE.txt[:-4])=DE, убираем (.txt)
+            #print(lang_from)
             text_translated = translate_it(fr.read(), '{}-{}'.format(lang_from, lang_ru))
             result_file = os.path.join(result_dir, file)
         with open(result_file, 'w', encoding='utf8') as fw:
