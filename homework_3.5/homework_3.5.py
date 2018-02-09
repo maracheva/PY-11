@@ -33,7 +33,6 @@ class YandexMetrikaUser(object):
                                 params={'pretty': 1})
         counters = response.json()['counters']
         counter_list = [counter['id'] for counter in counters]
-        # return [counter['id'] for counter in counters]
         return counter_list
 
     def get_counter_info(self, token, counter_id):
@@ -46,7 +45,6 @@ class YandexMetrikaUser(object):
         }
         response = requests.get('https://api-metrika.yandex.ru/stat/v1/data', params, headers=headers)
         info_count = response.json()['totals']
-        # return [visits['data'] for visits in visits_count]
         return info_count
 
 
