@@ -35,4 +35,5 @@ def get_average_temperature(file_name):
     celsius_temp = fahrenheit_to_celsius(average_temp)
     return '{:.2f}'.format(celsius_temp)
 
-print('1. Средняя температура в Цельсиях: {}\n'.format(get_average_temperature('temps.txt')))
+averange_temterature = get_average_temperature('temps.txt')
+print(f'1. Средняя температура в Цельсиях: {averange_temterature}')
