@@ -32,7 +32,7 @@ def get_temperatures(file_name):
 def get_average_temperature(file_name):
     temperatures = get_temperatures(file_name)
     average_temp = get_average(temperatures)
-    celsius_temp = fahrenheit_to_celsius(average_temp)
+    celsius_temp = convert_temperature(average_temp)
     return '{:.2f}'.format(celsius_temp)
 
 averange_temterature = get_average_temperature('temps.txt')
