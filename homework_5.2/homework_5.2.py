@@ -1,6 +1,4 @@
 
-import unittest
-
 from typing import Iterable
 
 
@@ -29,9 +27,7 @@ class LinkedList:
             yield current.data
             current = current.next
 
-    # def reverse(self) -> None:
-    #     raise NotImplementedError
-
+    @property
     def reverse(self):
         current = self.head
         previous = None     # = None, т.к. нет узла перед head
@@ -46,34 +42,5 @@ class LinkedList:
 
 linked_list = LinkedList([1, 2, 3])
 print(list(linked_list))
-print(list(linked_list.reverse()))
+print(list(linked_list.reverse))
 
-class LinkedListTestCase(unittest.TestCase):
-
-    def test_reverse(self):
-        cases = dict(
-            empty=dict(
-                items=[],
-                expected_items=[],
-            ),
-            single=dict(
-                items=[1],
-                expected_items=[1],
-            ),
-            double=dict(
-                items=[1, 2],
-                expected_items=[2, 1],
-            ),
-            triple=dict(
-                items=[1, 2, 3],
-                expected_items=[3, 2, 1],
-            ),
-        )
-        for case, data in cases.items():
-            with self.subTest(case=case):
-                linked_list = LinkedList(data['items'])
-                linked_list.reverse()
-                self.assertListEqual(
-                    data['expected_items'],
-                    list(linked_list),
-                )
