@@ -10,24 +10,19 @@ TOKEN = '5dfd6b0dee902310df772082421968f4c06443abecbc082a8440cb18910a56daca73ac8
 
 api_v = 5.73
 APP_ID = 6353308  # application ID
-LOGIN_URL = 'perevoloki_85@mail.ru'
-PASSWORD = 'samara'
 
-# session = vk.AuthSession(app_id=APP_ID, user_login=LOGIN_URL, user_password=PASSWORD, scope='friends, groups')
 session = vk.Session(access_token=TOKEN)
 vkapi = vk.API(session, v=api_v, timeout=10, scope='friends, groups')
 
 '''
 В качестве входных данных будет выступать ссылка на профиль пользователя. 
-Конкретно, нам понадобится цифровой id, который не всегда в ней указан, 
-ведь многие используют возможность сделать ссылку на профиль на латинице. 
+Нам понадобится цифровой id, который не всегда в ней указан,  
 Поэтому с помощью метода utils.resolveScreenName мы получаем что нам нужно.
 '''
 link = 'https://vk.com/tim_leary'  # ссылка на страницу пользователя
 
-
 # Функция получает id пользователя и возвращает его значение
-def get_user_id(link):
+def get_user_id(*args):
     id = link
     if 'vk.com/' in link:  # проверяем эту ссылку
         id = link.split('/')[-1]  # если да, то получаем его последнюю часть
@@ -37,8 +32,6 @@ def get_user_id(link):
         id = id.replace('id', '')
     return int(id)
 
-
-# get_user_id(link)
 user_id = get_user_id(link)
 
 
@@ -85,22 +78,25 @@ friends_id = get_friends(user_id)
 # Функция находит  и возвращает список групп пользователя по id.
 # Будем находить группы методом groups.get. Параметр extended=1 позволяет получить расширенную информацию о группе.
 def get_groups_user(*args):
-    groups = vkapi.groups.get(user_id=user_id, extended=1)
+    groups = vkapi.groups.get(user_id=user_id, extended=1, fields='members_count')
     # Получили словарь типа {'count': int, 'items': [{}, {}, ..., {}]}
     print(f"Количество групп пользователя: {groups.get('count')}")
-    # print('Список групп:')
+    # print(f'Список групп: {groups}')
     # for i, group in enumerate(groups['items']):
     #     print(f'{i+1}. {group}')
 
+# get_groups_user(user_id)
+
+# Функция возвращает список id групп
+def get_groups_user_id(*args):
     # Получим словарь только с id групп пользователя:
     groups_id = vkapi.groups.get(user_id=user_id, extended=0)
     # Генератор списка id групп пользователя:
     groups_id_list = [id for id in groups_id['items']]
-    print(groups_id_list)
+    # print(groups_id_list)
     return groups_id_list
 
-
-# get_groups_user(user_id)
+# get_groups_user_id(user_id)
 
 # Найдем список групп друзей пользователя
 # def get_groups_friends(*args):
@@ -120,10 +116,9 @@ def get_groups_user(*args):
 # Опредлим, являются ли друзья пользователя членами сообществ пользователя
 def get_is_members(*args):
     friends_id = get_friends(user_id)
-    group_id_list = get_groups_user(user_id)
+    group_id_list = get_groups_user_id(user_id)
     group_id = '74404187'
     members = vkapi.groups.isMember(group_id=group_id, user_ids=friends_id, extended=1)
-    # for group_id in group_id_list:
     # members = [vkapi.groups.isMember(group_id=group_id, user_ids=friends_id, extended=1) for group_id in group_id_list]
     time.sleep(1)
     print(members)
@@ -131,23 +126,33 @@ def get_is_members(*args):
     '''
     Получим список словарей по каждому другу пользователя типа: 
     [{'member': 0, 'user_id': 8822}, {'member': 1, 'user_id': 20338},...{}]
-    Требуется исключить из списка друзей, которые не являются членами группы пользователя ({'member': 0}), 
-    т.е. в список добавляем словари, в которых {'member': 1}.
+    Требуется исключить из списка друзей, которые являются членами группы пользователя ({'member': 1}), 
+    т.е. в список добавляем словари, в которых {'member': 0}.
     '''
+    friends_out_of_groups = [friend for friend in members if friend['member'] == 0]
+    # Список друзей, имеющих с пользователем общие группы:
     friends_in_groups = [friend for friend in members if friend['member'] == 1]
+    print(friends_out_of_groups)
     print(friends_in_groups)
 
-    return members
-
+    return friends_out_of_groups
 
 get_is_members(friends_id)
 
-# def main():
-#     user_id = input('Введите id или ссылку на страницу пользователя (в конце добавьте пробел): \n')
-#     user_id = get_user_id(user_id)
-#     print(f'Идентификатор пользователя: id = {user_id}')
+
+# Функция выводит результат обработки запроса и показывает, сколько осталось до конца обработки:
+# def output_result(*args):
+
+
+def main():
+    user_id = input('Введите id или ссылку на страницу пользователя (в конце не забудьте пробел): \n')
+    user_id = get_user_id(user_id)
+    print(f'Идентификатор пользователя: id = {user_id}')
+
+    groups_list = get_groups_user(user_id)
+    with open('groups.json', 'w', encoding='utf-8') as file:
+        json.dump(groups_list, file, sort_keys=True,
+                  indent=2, ensure_ascii=False)
+#       output_result('Запись в файл завершена')
 #
-#
-#
-#
-# main()
+main()
