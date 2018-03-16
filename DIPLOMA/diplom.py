@@ -81,11 +81,22 @@ def get_groups_user(*args):
     groups = vkapi.groups.get(user_id=user_id, extended=1, fields='members_count')
     # Получили словарь типа {'count': int, 'items': [{}, {}, ..., {}]}
     print(f"Количество групп пользователя: {groups.get('count')}")
-    # print(f'Список групп: {groups}')
+    print(f"Список групп: {groups.get('items')}")
     # for i, group in enumerate(groups['items']):
     #     print(f'{i+1}. {group}')
 
-# get_groups_user(user_id)
+    groups_list = groups.get('items')
+    groups_list_out = []
+    for group in groups_list:
+        groups_list_out.append(
+            {'name': group.get('name'),
+             'gid': group.get('id'),
+             'members_count': group.get('members_count')
+             })
+    # print(groups_list_out)
+    return groups_list_out
+
+get_groups_user(user_id)
 
 # Функция возвращает список id групп
 def get_groups_user_id(*args):
@@ -137,7 +148,7 @@ def get_is_members(*args):
 
     return friends_out_of_groups
 
-get_is_members(friends_id)
+# get_is_members(friends_id)
 
 
 # Функция выводит результат обработки запроса и показывает, сколько осталось до конца обработки:
@@ -150,9 +161,9 @@ def main():
     print(f'Идентификатор пользователя: id = {user_id}')
 
     groups_list = get_groups_user(user_id)
-    with open('groups.json', 'w', encoding='utf-8') as file:
-        json.dump(groups_list, file, sort_keys=True,
-                  indent=2, ensure_ascii=False)
+    with open('groups.json', 'w', encoding='utf-8') as fw:
+        data = groups_list
+        json.dump(data, fw, sort_keys=True, indent=2, ensure_ascii=False)
 #       output_result('Запись в файл завершена')
 #
 main()
