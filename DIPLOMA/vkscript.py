@@ -43,12 +43,23 @@ var members = API.groups.isMember(
                             {"group_id": %s,
                             "user_ids": %s,
                             "extended":"1",
-                            "v":"5.73"});
+                            });
 
 return members;
 '''
 
 # Метод groups.Members
+CODE_getMEMBERS = '''
+var i = 0;
+var members = [];
+var resp = API.groups.getMembers({
+                "group_id": %s,
+                "filter": "friends"
+});
+members.push(resp);
+return members;
+'''
+
 CODE = '''
 var i = 0;
 var members = [];
